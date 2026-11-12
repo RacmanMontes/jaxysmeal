@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Bites | Admin Dashboard</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+    color: #333;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background: #155c41;
+    color: white;
+    padding: 25px 18px;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.sidebar a,
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 8px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: white;
+    text-align: left;
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sidebar a:hover,
+.sidebar button:hover,
+.sidebar .active {
+    background: #286b49;
+}
+
+.main {
+    flex: 1;
+    min-width: 0;
+    padding: 30px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.topbar h1 {
+    font-size: 28px;
+    color: #155c41;
+}
+
+.admin-label {
+    background: #e8f1e8;
+    color: #155c41;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0000000d;
+}
+
+.stat-card p {
+    color: #777;
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    font-size: 30px;
+    color: #155c41;
+}
+
+.section {
+    display: none;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0000000d;
+    margin-bottom: 25px;
+}
+
+.section.show {
+    display: block;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    color: #155c41;
+}
+
+.btn {
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #155c41;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #286b49;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-secondary {
+    background: #e8ece9;
+    color: #333;
+}
+
+.btn-warning {
+    background: #e7b95c;
+    color: #222;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d5d9d6;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+}
+
+input[type="file"] {
+    cursor: pointer;
+    padding: 10px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th,
+td {
+    padding: 13px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+th {
+    background: #f2f6f3;
+    color: #155c41;
+}
+
+.product-image {
+    width: 55px;
+    height: 55px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #eee;
+}
+
+.actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff0c2;
+    color: #8a6500;
+}
+
+.status-preparing {
+    background: #dceaff;
+    color: #174c91;
+}
+
+.status-ready-for-pickup {
+    background: #d9f5e4;
+    color: #17663a;
+}
+
+.status-completed {
+    background: #e5e5e5;
+    color: #333;
+}
+
+.status-cancelled {
+    background: #ffe0e0;
+    color: #a21d1d;
+}
+
+.empty {
+    padding: 25px;
+    text-align: center;
+    color: #777;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#productForm {
+    background: #f8faf7;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#productForm[hidden] {
+    display: none;
+}
+
+.small-description {
+    font-size: 12px;
+    color: #777;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.image-preview {
+    display: none;
+    width: 150px;
+    height: 120px;
+    object-fit: contain;
+    border: 1px solid #d5d9d6;
+    border-radius: 8px;
+    background: white;
+    margin-top: 8px;
+    padding: 4px;
+}
+
+.image-help {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
+}
+
+@media (max-width: 850px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .sidebar nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .sidebar a,
+    .sidebar button {
+        margin: 0;
+    }
+
+    .main {
+        padding: 18px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .topbar h1 {
+        font-size: 23px;
+    }
+
+    .section {
+        padding: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="logo">Campus Bites</div>
+
+    <nav>
+        <a href="#" class="active" data-section="dashboard">Dashboard</a>
+        <a href="#" data-section="products">Manage Products</a>
+        <a href="#" data-section="orders">Manage Orders</a>
+        <button type="button" id="logoutBtn">Log Out</button>
+    </nav>
+</aside>
+
+<main class="main">
+
+    <div class="topbar">
+        <h1 id="pageTitle">Dashboard Overview</h1>
+        <span class="admin-label">Administrator</span>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <p>Total Products</p>
+            <h2 id="totalProducts">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Pending Orders</p>
+            <h2 id="pendingOrders">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Total Orders</p>
+            <h2 id="totalOrders">0</h2>
+        </div>
+
+    </div>
+
+    <section id="dashboard" class="section show">
+
+        <div class="section-heading">
+            <h2>Recent Orders</h2>
+            <button class="btn btn-primary" data-go="orders">
+                View All Orders
+            </button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recentOrdersBody"></tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section id="products" class="section">
+
+        <div class="section-heading">
+            <h2>Manage Products</h2>
+
+            <button class="btn btn-primary" id="addProductBtn">
+                + Add Product
+            </button>
+        </div>
+
+        <form id="productForm" hidden>
+
+            <h3 id="formTitle" style="margin-bottom:18px">
+                Add New Product
+            </h3>
+
+            <input type="hidden" id="productId">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input id="productName" maxlength="100" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productPrice">Price (₱)</label>
+                    <input
+                        id="productPrice"
+                        type="number"
+                        min="0.01"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+
+                    <select id="productCategory" required>
+                        <option value="">Select category</option>
+                        <option value="Meals">Meals</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Drinks">Drinks</option>
+                        <option value="Desserts">Desserts</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productImageFile">Product Image</label>
+
+                    <input
+                        id="productImageFile"
+                        type="file"
+                        accept="image/*"
+                    >
+
+                    <input type="hidden" id="productImageData">
+
+                    <span class="image-help">
+                        Click Choose File to select a product image from
+                        your computer. Supported formats include JPG,
+                        PNG, and WEBP. Maximum file size: 5 MB.
+                    </span>
+
+                    <img
+                        id="productImagePreview"
+                        class="image-preview"
+                        alt="Product image preview"
+                    >
+
+                    <button
+                        class="btn btn-secondary"
+                        type="button"
+                        id="removeProductImageBtn"
+                        style="display:none; margin-top:8px;"
+                    >
+                        Remove Image
+                    </button>
+                </div>
+
+                <div class="form-group full">
+                    <label for="productDescription">Description</label>
+                    <textarea
+                        id="productDescription"
+                        maxlength="500"
+                    ></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">
+                    Save Product
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    type="button"
+                    id="cancelProductBtn"
+                >
+                    Cancel
+                </button>
+            </div>
+
+        </form>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="productsBody"></tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section id="orders" class="section">
+
+        <div class="section-heading">
+            <h2>Manage Customer Orders</h2>
+
+            <button class="btn btn-secondary" id="refreshOrdersBtn">
+                Refresh Orders
+            </button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Order Details</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Update Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ordersBody"></tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+</div>
+
+<script>
+"use strict";
+
+const API = {
+    auth: "auth.php",
+    products: "products.php",
+    addProduct: "add_product.php",
+    updateProduct: "update_product.php",
+    deleteProduct: "delete_product.php",
+    orders: "orders.php",
+    updateOrder: "update_order_status.php"
+};
+
+let products = [];
+let orders = [];
+let imageRemoved = false;
+
+const productForm = document.getElementById("productForm");
+const productImageFile = document.getElementById("productImageFile");
+const productImageData = document.getElementById("productImageData");
+const productImagePreview = document.getElementById("productImagePreview");
+const removeProductImageBtn = document.getElementById("removeProductImageBtn");
+
+async function apiRequest(url, options = {}) {
+    const response = await fetch(url, {
+        credentials: "same-origin",
+        ...options
+    });
+
+    let result;
+
+    try {
+        result = await response.json();
+    } catch {
+        throw new Error(
+            "Invalid server response. Check your PHP files and database connection."
+        );
+    }
+
+    if (!response.ok || result.success === false) {
+        throw new Error(result.message || `Request failed: ${response.status}`);
+    }
+
+    return result;
+}
+
+async function postJSON(url, data) {
+    return apiRequest(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+}
+
+async function verifyAdmin() {
+    try {
+        const result = await postJSON(API.auth, {
+            action: "session"
+        });
+
+        if (!result.user || result.user.role !== "admin") {
+            throw new Error("Administrator login required.");
+        }
+
+        return true;
+    } catch (error) {
+        alert(error.message);
+        window.location.replace("adminlogin.html");
+        return false;
+    }
+}
+
+function money(value) {
+    return new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP"
+    }).format(Number(value) || 0);
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[character]);
+}
+
+function normalizeStatus(status) {
+    const value = String(status || "Pending").toLowerCase().trim();
+
+    if (value === "preparing") return "Preparing";
+
+    if (value === "ready" || value === "ready for pickup") {
+        return "Ready for Pickup";
+    }
+
+    if (value === "completed") return "Completed";
+    if (value === "cancelled" || value === "canceled") return "Cancelled";
+
+    return "Pending";
+}
+
+function statusBadge(status) {
+    const value = normalizeStatus(status);
+    const className = value.toLowerCase().replace(/\s+/g, "-");
+
+    return `<span class="status status-${className}">${escapeHTML(value)}</span>`;
+}
+
+function renderStats() {
+    document.getElementById("totalProducts").textContent = products.length;
+
+    document.getElementById("pendingOrders").textContent =
+        orders.filter(order => normalizeStatus(order.status) === "Pending").length;
+
+    document.getElementById("totalOrders").textContent = orders.length;
+}
+
+function renderProducts() {
+    const tbody = document.getElementById("productsBody");
+
+    if (!products.length) {
+        tbody.innerHTML =
+            '<tr><td colspan="5" class="empty">No products found. Add your first product.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = products.map(product => {
+        const image = product.image
+            ? `<img class="product-image" src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" onerror="this.style.display='none'">`
+            : '<div class="product-image"></div>';
+
+        return `
+            <tr>
+                <td>${image}</td>
+                <td>
+                    <strong>${escapeHTML(product.name)}</strong>
+                    <br>
+                    <span class="small-description">
+                        ${escapeHTML(product.description || "")}
+                    </span>
+                </td>
+                <td>${escapeHTML(product.category)}</td>
+                <td>${money(product.price)}</td>
+                <td>
+                    <div class="actions">
+                        <button class="btn btn-warning"
+                            data-edit="${Number(product.id)}">Edit</button>
+                        <button class="btn btn-danger"
+                            data-delete="${Number(product.id)}">Remove</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function renderOrders() {
+    const tbody = document.getElementById("ordersBody");
+    const recentBody = document.getElementById("recentOrdersBody");
+
+    if (!orders.length) {
+        tbody.innerHTML =
+            '<tr><td colspan="6" class="empty">No customer orders found.</td></tr>';
+
+        recentBody.innerHTML =
+            '<tr><td colspan="5" class="empty">No orders yet.</td></tr>';
+
+        return;
+    }
+
+    tbody.innerHTML = orders.map(order => `
+        <tr>
+            <td>
+                ${Number(order.id)}
+                <br>
+                <span class="small-description">
+                    ${escapeHTML(order.createdAt || "")}
+                </span>
+            </td>
+            <td>
+                ${escapeHTML(order.customerName || "Customer")}
+                <br>
+                <span class="small-description">
+                    ${escapeHTML(order.email || "")}
+                </span>
+            </td>
+            <td>
+                ${escapeHTML((order.items || []).map(item =>
+                    `${item.name} × ${item.quantity}`
+                ).join(", "))}
+            </td>
+            <td>${money(order.total)}</td>
+            <td>${statusBadge(order.status)}</td>
+            <td>
+                <select data-status-order="${Number(order.id)}">
+                    ${[
+                        "Pending",
+                        "Preparing",
+                        "Ready for Pickup",
+                        "Completed",
+                        "Cancelled"
+                    ].map(status => `
+                        <option value="${status}"
+                            ${normalizeStatus(order.status) === status ? "selected" : ""}>
+                            ${status}
+                        </option>
+                    `).join("")}
+                </select>
+                <button class="btn btn-primary"
+                    style="margin-top:7px"
+                    data-update-order="${Number(order.id)}">
+                    Update
+                </button>
+            </td>
+        </tr>
+    `).join("");
+
+    recentBody.innerHTML = orders.slice(0, 5).map(order => `
+        <tr>
+            <td>${Number(order.id)}</td>
+            <td>${escapeHTML(order.customerName || "Customer")}</td>
+            <td>${escapeHTML((order.items || []).map(item =>
+                `${item.name} × ${item.quantity}`
+            ).join(", "))}</td>
+            <td>${money(order.total)}</td>
+            <td>${statusBadge(order.status)}</td>
+        </tr>
+    `).join("");
+}
+
+function renderAll() {
+    renderStats();
+    renderProducts();
+    renderOrders();
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.toggle("show", section.id === sectionId);
+    });
+
+    document.querySelectorAll("[data-section]").forEach(link => {
+        link.classList.toggle("active", link.dataset.section === sectionId);
+    });
+
+    const titles = {
+        dashboard: "Dashboard Overview",
+        products: "Manage Products",
+        orders: "Manage Orders"
+    };
+
+    document.getElementById("pageTitle").textContent =
+        titles[sectionId] || "Admin Dashboard";
+}
+
+document.querySelectorAll("[data-section]").forEach(link => {
+    link.addEventListener("click", event => {
+        event.preventDefault();
+        showSection(link.dataset.section);
+    });
+});
+
+document.querySelectorAll("[data-go]").forEach(button => {
+    button.addEventListener("click", () => showSection(button.dataset.go));
+});
+
+async function loadProducts() {
+    const result = await apiRequest(API.products);
+    products = result.products || [];
+    renderStats();
+    renderProducts();
+}
+
+async function loadOrders() {
+    const result = await apiRequest(API.orders);
+    orders = result.orders || [];
+    renderStats();
+    renderOrders();
+}
+
+function resetProductForm() {
+    productForm.reset();
+
+    document.getElementById("productId").value = "";
+    productImageData.value = "";
+    productImageFile.value = "";
+    imageRemoved = false;
+
+    productImagePreview.removeAttribute("src");
+    productImagePreview.style.display = "none";
+    removeProductImageBtn.style.display = "none";
+
+    document.getElementById("formTitle").textContent = "Add New Product";
+}
+
+function showImagePreview(src) {
+    if (!src) {
+        productImagePreview.removeAttribute("src");
+        productImagePreview.style.display = "none";
+        removeProductImageBtn.style.display = "none";
+        return;
+    }
+
+    productImagePreview.src = src;
+    productImagePreview.style.display = "block";
+    removeProductImageBtn.style.display = "inline-block";
+}
+
+productImageFile.addEventListener("change", () => {
+    const file = productImageFile.files[0];
+
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        alert("Choose a JPG, PNG, or WEBP image.");
+        productImageFile.value = "";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("The image must be 5 MB or smaller.");
+        productImageFile.value = "";
+        return;
+    }
+
+    imageRemoved = false;
+
+    const reader = new FileReader();
+
+    reader.onload = event => showImagePreview(event.target.result);
+    reader.onerror = () => alert("Unable to preview this image.");
+
+    reader.readAsDataURL(file);
+});
+
+removeProductImageBtn.addEventListener("click", () => {
+    productImageFile.value = "";
+    productImageData.value = "";
+    imageRemoved = true;
+    showImagePreview("");
+});
+
+document.getElementById("addProductBtn").addEventListener("click", () => {
+    resetProductForm();
+    productForm.hidden = false;
+    productForm.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+document.getElementById("cancelProductBtn").addEventListener("click", () => {
+    productForm.hidden = true;
+    resetProductForm();
+});
+
+productForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const id = document.getElementById("productId").value;
+    const name = document.getElementById("productName").value.trim();
+    const category = document.getElementById("productCategory").value;
+    const price = Number(document.getElementById("productPrice").value);
+    const description = document.getElementById("productDescription").value.trim();
+
+    if (!name || !category || !Number.isFinite(price) || price <= 0) {
+        alert("Enter a valid product name, category, and price.");
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("category", category);
+    formData.append("price", String(price));
+    formData.append("description", description);
+    formData.append("remove_image", imageRemoved ? "1" : "0");
+
+    if (id) formData.append("id", id);
+
+    const file = productImageFile.files[0];
+
+    if (file) {
+        formData.append("image", file);
+    }
+
+    const endpoint = id ? API.updateProduct : API.addProduct;
+    const saveButton = productForm.querySelector('[type="submit"]');
+
+    saveButton.disabled = true;
+
+    try {
+        const result = await apiRequest(endpoint, {
+            method: "POST",
+            body: formData
+        });
+
+        alert(result.message || "Product saved successfully.");
+
+        productForm.hidden = true;
+        resetProductForm();
+
+        await loadProducts();
+    } catch (error) {
+        console.error(error);
+        alert("Product could not be saved: " + error.message);
+    } finally {
+        saveButton.disabled = false;
+    }
+});
+
+document.getElementById("productsBody").addEventListener("click", async event => {
+    const editButton = event.target.closest("[data-edit]");
+    const deleteButton = event.target.closest("[data-delete]");
+
+    if (editButton) {
+        const product = products.find(
+            item => String(item.id) === editButton.dataset.edit
+        );
+
+        if (!product) return;
+
+        resetProductForm();
+
+        document.getElementById("productId").value = product.id;
+        document.getElementById("productName").value = product.name || "";
+        document.getElementById("productPrice").value = product.price ?? "";
+        document.getElementById("productCategory").value = product.category || "";
+        document.getElementById("productDescription").value = product.description || "";
+
+        imageRemoved = false;
+        showImagePreview(product.image || "");
+
+        document.getElementById("formTitle").textContent = "Edit Product";
+        productForm.hidden = false;
+        productForm.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        return;
+    }
+
+    if (deleteButton) {
+        const id = Number(deleteButton.dataset.delete);
+        const product = products.find(item => Number(item.id) === id);
+
+        if (!product || !confirm(`Remove "${product.name}" from the menu?`)) {
+            return;
+        }
+
+        try {
+            const result = await postJSON(API.deleteProduct, { id });
+            alert(result.message || "Product removed successfully.");
+            await loadProducts();
+        } catch (error) {
+            alert("Product could not be removed: " + error.message);
+        }
+    }
+});
+
+document.getElementById("ordersBody").addEventListener("click", async event => {
+    const button = event.target.closest("[data-update-order]");
+
+    if (!button) return;
+
+    const id = Number(button.dataset.updateOrder);
+    const select = document.querySelector(`[data-status-order="${id}"]`);
+
+    if (!select) return;
+
+    try {
+        const result = await postJSON(API.updateOrder, {
+            id,
+            status: select.value
+        });
+
+        alert(result.message || "Order status updated.");
+        await loadOrders();
+    } catch (error) {
+        alert("Order status could not be updated: " + error.message);
+    }
+});
+
+document.getElementById("refreshOrdersBtn").addEventListener("click", async () => {
+    try {
+        await loadOrders();
+    } catch (error) {
+        alert("Orders could not be loaded: " + error.message);
+    }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+    if (!confirm("Are you sure you want to log out?")) return;
+
+    try {
+        await postJSON(API.auth, { action: "logout" });
+    } catch (error) {
+        console.error(error);
+    }
+
+    window.location.replace("adminlogin.html");
+});
+
+async function initializeDashboard() {
+    const authenticated = await verifyAdmin();
+
+    if (!authenticated) return;
+
+    try {
+        await Promise.all([loadProducts(), loadOrders()]);
+        renderAll();
+    } catch (error) {
+        console.error(error);
+        alert("Dashboard loading failed: " + error.message);
+    }
+}
+
+initializeDashboard();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Bites | Admin Login</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --green: #155c41;
+    --light: #e8f1e8;
+    --gold: #e7b95c;
+    --text: #183c2d;
+    --muted: #64756b;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f8f3;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    padding: 32px;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px #183c2d18;
+}
+
+.logo {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--green);
+}
+
+.brand span {
+    color: #c38b20;
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: var(--green);
+    margin-top: 24px;
+}
+
+h1 {
+    font-size: 30px;
+    margin: 10px 0;
+}
+
+p {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+form {
+    display: grid;
+    gap: 16px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    margin-top: 7px;
+    border: 1px solid #ccd6cd;
+    border-radius: 8px;
+    font: inherit;
+    color: var(--text);
+}
+
+button,
+.back-link {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--green);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0d4932;
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.back-link {
+    margin-top: 12px;
+    background: #e8eee7;
+    color: var(--text);
+}
+
+.notice {
+    display: none;
+    background: #fff0d9;
+    color: #694a12;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 0 0 15px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.small {
+    font-size: 12px;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="login-card">
+
+    <div class="logo">🥪</div>
+    <div class="brand">Campus<span>Bites</span></div>
+
+    <div class="eyebrow">ADMINISTRATION</div>
+    <h1>Admin Login</h1>
+
+    <p>Sign in to manage canteen products and customer orders.</p>
+
+    <div id="message" class="notice" role="alert"></div>
+
+    <form id="admin-login-form">
+
+        <label for="email">
+            Admin email
+            <input
+                id="email"
+                type="email"
+                autocomplete="username"
+                required
+                placeholder="Enter admin email"
+            >
+        </label>
+
+        <label for="password">
+            Password
+            <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                required
+                placeholder="Enter password"
+            >
+        </label>
+
+        <button type="submit" id="loginButton">
+            Log in to Dashboard
+        </button>
+
+    </form>
+
+    <a class="back-link" href="index.html">
+        Back to Campus Bites
+    </a>
+
+    <p class="small">
+        Administrator access only.
+    </p>
+
+</main>
+
+<script>
+"use strict";
+
+const form = document.getElementById("admin-login-form");
+const message = document.getElementById("message");
+const loginButton = document.getElementById("loginButton");
+
+function showMessage(text) {
+    message.textContent = text;
+    message.style.display = "block";
+}
+
+form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    message.style.display = "none";
+
+    loginButton.disabled = true;
+    loginButton.textContent = "Logging in...";
+
+    const email = document.getElementById("email")
+        .value.trim().toLowerCase();
+
+    const password = document.getElementById("password").value;
+
+    try {
+
+        const response = await fetch("auth.php", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "login",
+                role: "admin",
+                email: email,
+                password: password
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || "Invalid email or password."
+            );
+        }
+
+        if (!result.user || result.user.role !== "admin") {
+
+            await fetch("auth.php", {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    action: "logout"
+                })
+            });
+
+            throw new Error(
+                "This account does not have administrator access."
+            );
+        }
+
+        window.location.href = "admin%20dashboard.html";
+
+    } catch (error) {
+
+        console.error("Login error:", error);
+
+        showMessage(
+            error.message || "Unable to connect to the server."
+        );
+
+    } finally {
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Log in to Dashboard";
+
+    }
+
+});
+</script>
+
+</body>
+</html>

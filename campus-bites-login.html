@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bites - Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f4f8ef, #fff1dc);
+            color: #20352d;
+            padding: 20px;
+        }
+        .container {
+            width: 900px;
+            max-width: 100%;
+            min-height: 570px;
+            display: grid;
+            grid-template-columns: 45% 55%;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        .welcome-section {
+            background: #176b4d;
+            color: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .logo {
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+        .welcome-section h1 {
+            font-size: 40px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .welcome-section p {
+            color: #e1f0e7;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .tag {
+            margin-top: 25px;
+            display: inline-block;
+            width: fit-content;
+            padding: 10px 15px;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 30px;
+            font-size: 13px;
+        }
+        .form-section {
+            padding: 45px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .form-section h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+        .description {
+            color: #68766f;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .form-group {
+            margin-bottom: 17px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #dfe7e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus {
+            border-color: #176b4d;
+            box-shadow: 0 0 0 3px rgba(23, 107, 77, 0.1);
+        }
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 10px;
+            background: #176b4d;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-button:hover {
+            background: #104d38;
+        }
+        .secondary-buttons {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .secondary-button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .create-button {
+            border: 1px solid #176b4d;
+            color: #176b4d;
+        }
+        .create-button:hover {
+            background: #eaf4ed;
+        }
+        .admin-button {
+            border: 1px solid #c77b19;
+            color: #8a4b08;
+        }
+        .admin-button:hover {
+            background: #fff3df;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .form-title {
+            margin-bottom: 5px;
+        }
+        .message {
+            min-height: 22px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .error {
+            color: #b42318;
+        }
+        .success {
+            color: #176b4d;
+        }
+        .account-panel {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #f5f8f4;
+        }
+        .account-panel h3 {
+            margin-bottom: 8px;
+        }
+        .account-panel p {
+            color: #68766f;
+            margin-bottom: 15px;
+        }
+        .role {
+            display: inline-block;
+            padding: 5px 10px;
+            margin-bottom: 15px;
+            border-radius: 20px;
+            background: #e6f3e9;
+            color: #176b4d;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .admin-tools {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #fff3df;
+        }
+        .admin-tools h3 {
+            color: #8a4b08;
+        }
+        .admin-tools p {
+            margin: 0;
+        }
+        .logout-button {
+            padding: 10px 15px;
+            border: 1px solid #176b4d;
+            border-radius: 8px;
+            background: white;
+            color: #176b4d;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background: #eaf4ed;
+        }
+        .note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #68766f;
+            line-height: 1.5;
+        }
+        @media (max-width: 700px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .welcome-section {
+                padding: 35px;
+            }
+            .welcome-section h1 {
+                font-size: 32px;
+            }
+            .form-section {
+                padding: 35px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <section class="welcome-section">
+            <div class="logo">🍱</div>
+            <h1>Welcome to<br>Campus Bites</h1>
+            <p>
+                Your school canteen made easier.
+                Log in to order your favorite
+                meals, snacks, and drinks.
+            </p>
+            <span class="tag">Fresh Favorites • Easy Ordering</span>
+        </section>
+
+        <section class="form-section">
+            <div id="loginArea">
+                <h2>Welcome Back</h2>
+                <p class="description">
+                    Log in to your Campus Bites account.
+                </p>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="login-button">Log In</button>
+                </form>
+
+                <div class="secondary-buttons">
+                    <button type="button" class="secondary-button create-button" id="showRegisterButton">
+                        Create Account
+                    </button>
+                    <button type="button" class="secondary-button admin-button" id="showAdminButton">
+                        Admin Login
+                    </button>
+                </div>
+
+                <p id="loginMessage" class="message"></p>
+            </div>
+
+            <div id="registerArea" class="hidden">
+                <h2 class="form-title">Create Account</h2>
+                <p class="description">Register for your Campus Bites account.</p>
+
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email Address</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="login-button">Create Account</button>
+                </form>
+
+                <div class="secondary-buttons">
+                    <button type="button" class="secondary-button create-button" id="backToLoginFromRegister">
+                        Back to Login
+                    </button>
+                </div>
+                <p id="registerMessage" class="message"></p>
+            </div>
+
+            <div id="adminArea" class="hidden">
+                <h2 class="form-title">Admin Login</h2>
+                <p class="description">Log in using your administrator credentials.</p>
+
+                <form id="adminForm">
+                    <div class="form-group">
+                        <label for="adminEmail">Admin Email</label>
+                        <input type="email" id="adminEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" required>
+                    </div>
+                    <button type="submit" class="login-button">Log In as Admin</button>
+                </form>
+
+                <div class="secondary-buttons">
+                    <button type="button" class="secondary-button admin-button" id="backToLoginFromAdmin">
+                        Back to Login
+                    </button>
+                </div>
+                <p id="adminMessage" class="message"></p>
+                <p class="note">
+                    Demo Admin Account: Email: admin@campusbites.test Password: admin123
+                </p>
+            </div>
+
+            <div id="accountArea" class="hidden">
+                <h2>Account Dashboard</h2>
+                <p class="description">You are now logged in to Campus Bites.</p>
+
+                <div class="account-panel">
+                    <h3 id="accountName">Welcome!</h3>
+                    <p id="accountEmail"></p>
+                    <span id="accountRole" class="role"></span>
+
+                    <div id="adminTools" class="admin-tools hidden">
+                        <h3>Admin Tools</h3>
+                        <p>You are logged in as the administrator.</p>
+                    </div>
+
+                    <button type="button" class="logout-button" id="logoutButton">
+                        Log Out
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const SESSION_KEY = "campusBitesSession";
+        const ROLE_KEY = "campusBitesRole";
+        const USERS_KEY = "campusBitesUsers";
+
+        const ADMIN_EMAIL = "admin@campusbites.test";
+        const ADMIN_PASSWORD = "admin123";
+
+        const loginArea = document.getElementById("loginArea");
+        const registerArea = document.getElementById("registerArea");
+        const adminArea = document.getElementById("adminArea");
+        const accountArea = document.getElementById("accountArea");
+
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const adminForm = document.getElementById("adminForm");
+
+        function getUsers() {
+            const users = localStorage.getItem(USERS_KEY);
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = "message " + type;
+        }
+
+        function clearMessages() {
+            ["loginMessage", "registerMessage", "adminMessage"].forEach(function(id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = "";
+                    element.className = "message";
+                }
+            });
+        }
+
+        function hideAllAreas() {
+            loginArea.classList.add("hidden");
+            registerArea.classList.add("hidden");
+            adminArea.classList.add("hidden");
+            accountArea.classList.add("hidden");
+        }
+
+        function showLogin() {
+            hideAllAreas();
+            loginArea.classList.remove("hidden");
+            clearMessages();
+        }
+
+        function showRegister() {
+            hideAllAreas();
+            registerArea.classList.remove("hidden");
+            clearMessages();
+        }
+
+        function showAdmin() {
+            hideAllAreas();
+            adminArea.classList.remove("hidden");
+            clearMessages();
+        }
+
+        function showAccount(user) {
+            hideAllAreas();
+            accountArea.classList.remove("hidden");
+
+            document.getElementById("accountName").textContent =
+                "Welcome, " + user.name + "!";
+
+            document.getElementById("accountEmail").textContent = user.email;
+
+            document.getElementById("accountRole").textContent =
+                user.role === "admin" ? "ADMINISTRATOR" : "STUDENT";
+
+            const adminTools = document.getElementById("adminTools");
+
+            if (user.role === "admin") {
+                adminTools.classList.remove("hidden");
+            } else {
+                adminTools.classList.add("hidden");
+            }
+        }
+
+        document.getElementById("showRegisterButton").addEventListener(
+            "click",
+            showRegister
+        );
+
+        document.getElementById("showAdminButton").addEventListener(
+            "click",
+            showAdmin
+        );
+
+        document.getElementById("backToLoginFromRegister").addEventListener(
+            "click",
+            showLogin
+        );
+
+        document.getElementById("backToLoginFromAdmin").addEventListener(
+            "click",
+            showLogin
+        );
+
+        registerForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("registerName").value.trim();
+            const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password.length < 6) {
+                showMessage(
+                    "registerMessage",
+                    "Password must be at least 6 characters.",
+                    "error"
+                );
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage(
+                    "registerMessage",
+                    "Passwords do not match.",
+                    "error"
+                );
+                return;
+            }
+
+            const users = getUsers();
+
+            const existingUser = users.find(function(user) {
+                return user.email === email;
+            });
+
+            if (existingUser) {
+                showMessage(
+                    "registerMessage",
+                    "An account with this email already exists.",
+                    "error"
+                );
+                return;
+            }
+
+            const newUser = {
+                name: name,
+                email: email,
+                password: password,
+                role: "student"
+            };
+
+            users.push(newUser);
+            saveUsers(users);
+            registerForm.reset();
+
+            showMessage(
+                "registerMessage",
+                "Account created successfully! You can now log in.",
+                "success"
+            );
+
+            setTimeout(function() {
+                document.getElementById("loginEmail").value = email;
+                showLogin();
+            }, 1000);
+        });
+
+        loginForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+            const password = document.getElementById("loginPassword").value;
+            const users = getUsers();
+
+            const user = users.find(function(item) {
+                return item.email === email && item.password === password;
+            });
+
+            if (!user) {
+                showMessage(
+                    "loginMessage",
+                    "Incorrect email or password.",
+                    "error"
+                );
+                return;
+            }
+
+            sessionStorage.setItem(SESSION_KEY, user.email);
+            sessionStorage.setItem(ROLE_KEY, "student");
+
+            loginForm.reset();
+            showAccount(user);
+        });
+
+        adminForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("adminEmail").value.trim().toLowerCase();
+            const password = document.getElementById("adminPassword").value;
+
+            if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+                showMessage(
+                    "adminMessage",
+                    "Invalid admin email or password.",
+                    "error"
+                );
+                return;
+            }
+
+            const adminUser = {
+                name: "Campus Bites Admin",
+                email: ADMIN_EMAIL,
+                role: "admin"
+            };
+
+            sessionStorage.setItem(SESSION_KEY, ADMIN_EMAIL);
+            sessionStorage.setItem(ROLE_KEY, "admin");
+
+            adminForm.reset();
+            showAccount(adminUser);
+        });
+
+        document.getElementById("logoutButton").addEventListener(
+            "click",
+            function() {
+                sessionStorage.removeItem(SESSION_KEY);
+                sessionStorage.removeItem(ROLE_KEY);
+
+                showLogin();
+
+                showMessage(
+                    "loginMessage",
+                    "You have been logged out.",
+                    "success"
+                );
+            }
+        );
+
+        function restoreSession() {
+            const email = sessionStorage.getItem(SESSION_KEY);
+            const role = sessionStorage.getItem(ROLE_KEY);
+
+            if (!email) {
+                showLogin();
+                return;
+            }
+
+            if (email === ADMIN_EMAIL && role === "admin") {
+                showAccount({
+                    name: "Campus Bites Admin",
+                    email: ADMIN_EMAIL,
+                    role: "admin"
+                });
+                return;
+            }
+
+            const users = getUsers();
+
+            const user = users.find(function(item) {
+                return item.email === email;
+            });
+
+            if (user) {
+                showAccount(user);
+            } else {
+                sessionStorage.removeItem(SESSION_KEY);
+                sessionStorage.removeItem(ROLE_KEY);
+                showLogin();
+            }
+        }
+
+        restoreSession();
+    </script>
+</body>
+</html>
